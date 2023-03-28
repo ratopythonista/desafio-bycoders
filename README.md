@@ -5,8 +5,9 @@ Esse projeto é a solução do desafio proposto para a vaga de desenvolvedor, ma
 
 ## Especificação
 
-Essa aplicação é construida com linguagem de programação Python e biblioteca Dash by Plotly. Para rodar basta executar os comandos abaixo e acessar `localhost:5000`
+Essa aplicação é construida com linguagem de programação Python e biblioteca Dash by Plotly. Para rodar basta executar os comandos abaixo e acessar `localhost:8050`
 
 ```bash
-docker-compose up
+pip install -r requirements.txt
+python main.py
 ```

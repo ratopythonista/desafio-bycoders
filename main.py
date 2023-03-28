@@ -1,9 +1,13 @@
 import base64
 
 from dash import Dash, dcc, html
-from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
+from dash.dependencies import Input, Output
 
 import dash_bootstrap_components as dbc
+
+from desafio.parse import parse, get_base
+
 
 app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -26,34 +30,25 @@ app.layout = html.Div([
         },
         multiple=False
     ),
-    html.Div(id='output-cnab-upload'),
+    html.Div(id='output-cnab-upload', children=html.Div(get_base())),
 ])
 
 def parse_contents(file):
-    content_type, content_string = file.split(',')
+    _, content_string = file.split(',')
 
     decoded = base64.b64decode(content_string).decode()
 
-    table_header = [
-        html.Thead(html.Tr([html.Th("Conteudo")]))
-    ]
-
-    rows = list()
     for line in decoded.splitlines():
-        row = html.Tr([html.Td(line)])
-        rows.append(row)
+        parse(line)
 
-    table_body = [html.Tbody(rows)]
-
-    table = dbc.Table(table_header + table_body, bordered=True)
-
-    return table
+    return get_base()
 
 @app.callback(Output('output-cnab-upload', 'children'),
               Input('upload-cnab', 'contents'),)
 def update_output(file):
     if file is not None:
         return parse_contents(file)
+    raise PreventUpdate
 
 if __name__ == '__main__':
     app.run_server(debug=True)
